@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>金融统计：洞悉资本的密码</title>
+    <title>金融统计：量化你的金融直觉</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -39,7 +39,7 @@
     <div id="teacher-view" style="display: none;" class="p-6 min-h-screen flex-col">
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-600">《金融统计》第一课：洞悉数据的密码</h1>
+                <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-600">《金融统计》第一课：量化你的金融直觉</h1>
                 <p class="text-slate-400 mt-2 text-base md:text-lg" id="subtitle">扫码录入你的行为基因，体验金融大数据的实时计算魔法</p>
             </div>
             <div class="flex items-center gap-4">
@@ -78,10 +78,10 @@
 
             <!-- 右侧图表区 -->
             <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="glass-panel p-5 flex flex-col"><h3 class="text-lg font-medium mb-2 text-white">1. 毕业期望月薪分布 <span class="text-xs text-slate-400 ml-2">直方图/偏态分析</span></h3><div class="chart-container flex-1"><canvas id="salaryChart"></canvas></div></div>
-                <div class="glass-panel p-5 flex flex-col"><h3 class="text-lg font-medium mb-2 text-white">2. 课程“挂科”恐慌指数 <span class="text-xs text-slate-400 ml-2">市场情绪偏度</span></h3><div class="chart-container flex-1"><canvas id="panicChart"></canvas></div></div>
-                <div class="glass-panel p-5 flex flex-col"><h3 class="text-lg font-medium mb-2 text-white">3. 3000元奖学金资金去向 <span class="text-xs text-slate-400 ml-2">行为特征分类</span></h3><div class="chart-container flex-1"><canvas id="investChart"></canvas></div></div>
-                <div class="glass-panel p-5 flex flex-col"><h3 class="text-lg font-medium mb-2 text-white">4. 每月网购/外卖频次 <span class="text-xs text-slate-400 ml-2">观测离散极值与方差</span></h3><div class="chart-container flex-1"><canvas id="shopChart"></canvas></div></div>
+                <div class="glass-panel p-5 flex flex-col"><h3 class="text-lg font-medium mb-2 text-white">1. 1万元闲钱资产配置 <span class="text-xs text-slate-400 ml-2">分类特征分布</span></h3><div class="chart-container flex-1"><canvas id="investChart"></canvas></div></div>
+                <div class="glass-panel p-5 flex flex-col"><h3 class="text-lg font-medium mb-2 text-white">2. “高收益伴随高风险”认同度 <span class="text-xs text-slate-400 ml-2">直方偏态分析</span></h3><div class="chart-container flex-1"><canvas id="riskChart"></canvas></div></div>
+                <div class="glass-panel p-5 flex flex-col"><h3 class="text-lg font-medium mb-2 text-white">3. AI辅助投资信任度 <span class="text-xs text-slate-400 ml-2">观测离散极值与方差</span></h3><div class="chart-container flex-1"><canvas id="aiChart"></canvas></div></div>
+                <div class="glass-panel p-5 flex flex-col"><h3 class="text-lg font-medium mb-2 text-white">4. 课程陌生/焦虑指数 <span class="text-xs text-slate-400 ml-2">情绪偏度计算</span></h3><div class="chart-container flex-1"><canvas id="panicChart"></canvas></div></div>
             </div>
         </div>
     </div>
@@ -97,47 +97,59 @@
         <div id="form-container" style="display: block;" class="w-full max-w-md bg-white rounded-b-2xl rounded-t-none shadow-xl overflow-hidden transition-all duration-500">
             <div class="bg-gradient-to-r from-amber-500 to-orange-600 p-6 text-white text-center relative overflow-hidden">
                 <div class="absolute -right-4 -top-4 opacity-20 transform rotate-12"><i class="fas fa-coins text-6xl"></i></div>
-                <h1 class="text-2xl font-bold relative z-10">金融行为小调查</h1>
-                <p class="text-orange-100 text-sm mt-1 relative z-10">你真实的消费观，就是统计学的基石</p>
+                <h1 class="text-2xl font-bold relative z-10">金融直觉小调查</h1>
+                <p class="text-orange-100 text-sm mt-1 relative z-10">你真实的决策观，就是统计学的基石</p>
             </div>
             <form id="student-form" class="p-6 space-y-6">
-                <!-- 问 1 -->
+                
+                <!-- 问 1：闲钱投资 -->
                 <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">1. 预期管理：你期望自己毕业后的第一份工作，月薪能拿多少？</label>
-                    <div class="flex items-center gap-4">
-                        <input type="range" id="q-salary" min="3" max="30" step="1" value="8" class="flex-1">
-                        <span class="font-bold text-xl text-amber-600 w-16 text-right"><span id="salary-val">8</span><span class="text-sm ml-1 text-slate-500 font-normal">k</span></span>
-                    </div>
-                </div>
-                <!-- 问 2 -->
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">2. 消费频次特征：你每个月平均“网购+点外卖”大概多少次？</label>
-                    <div class="relative">
-                        <input type="number" id="q-shop" min="0" max="200" placeholder="例如: 15" required class="w-full pl-4 pr-12 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-amber-500 outline-none bg-slate-50 text-lg font-mono">
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 font-bold">次</div>
-                    </div>
-                </div>
-                <!-- 问 3 -->
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">3. 资金配置偏好：假如期末发了3000元奖学金，你第一反应是拿去干嘛？</label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">1. 资产配置：如果你有 1 万元闲钱，你更愿意放在哪？</label>
                     <div class="grid grid-cols-2 gap-3">
-                        <label class="cursor-pointer"><input type="radio" name="q-invest" value="存余额宝生息" class="peer sr-only" required><div class="text-center py-2 px-1 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 text-xs sm:text-sm font-medium">🛡️ 存余额宝生息</div></label>
-                        <label class="cursor-pointer"><input type="radio" name="q-invest" value="买点基金体验下" class="peer sr-only"><div class="text-center py-2 px-1 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 text-xs sm:text-sm font-medium">📈 买点基金体验下</div></label>
-                        <label class="cursor-pointer"><input type="radio" name="q-invest" value="留着考证/考研" class="peer sr-only"><div class="text-center py-2 px-1 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 text-xs sm:text-sm font-medium">📚 投资自己(考证等)</div></label>
-                        <label class="cursor-pointer"><input type="radio" name="q-invest" value="马上清空购物车" class="peer sr-only"><div class="text-center py-2 px-1 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 text-xs sm:text-sm font-medium">🛒 马上清空购物车</div></label>
+                        <label class="cursor-pointer"><input type="radio" name="q-invest" value="银行存款" class="peer sr-only" required><div class="text-center py-2 px-1 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 text-sm font-medium">🏦 银行存款</div></label>
+                        <label class="cursor-pointer"><input type="radio" name="q-invest" value="货币基金" class="peer sr-only"><div class="text-center py-2 px-1 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 text-sm font-medium">🛡️ 货币基金</div></label>
+                        <label class="cursor-pointer"><input type="radio" name="q-invest" value="股票基金" class="peer sr-only"><div class="text-center py-2 px-1 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 text-sm font-medium">📈 股票基金</div></label>
+                        <label class="cursor-pointer"><input type="radio" name="q-invest" value="个股" class="peer sr-only"><div class="text-center py-2 px-1 rounded-lg border border-slate-200 peer-checked:bg-amber-50 peer-checked:border-amber-500 peer-checked:text-amber-700 text-sm font-medium">🔥 个股</div></label>
+                        <label class="cursor-pointer col-span-2"><input type="radio" name="q-invest" value="暂时不投" class="peer sr-only"><div class="text-center py-2 px-1 rounded-lg border border-slate-200 peer-checked:bg-slate-100 peer-checked:border-slate-500 peer-checked:text-slate-700 text-sm font-medium">🛒 暂时不投 (消费/观望)</div></label>
                     </div>
                 </div>
-                <!-- 问 4 -->
+
+                <!-- 问 2：高风险高收益认同 -->
                 <div>
                     <label class="block text-sm font-semibold text-slate-700 mb-2">
-                        4. 情绪波动指数：看到《金融统计》里的推导公式，你的“挂科恐慌指数”是？
-                        <span class="block text-xs font-normal text-slate-500 mt-1">1 = 稳如老狗，满分过 | 10 = 救命，已经想重修了</span>
+                        2. 理念测度：你认为“高收益一定伴随高风险”这句话有多正确？
+                        <span class="block text-xs font-normal text-slate-500 mt-1">1 = 完全是胡扯 | 10 = 绝对真理</span>
+                    </label>
+                    <div class="flex items-center gap-4">
+                        <input type="range" id="q-risk" min="1" max="10" step="1" value="5" class="flex-1">
+                        <span id="risk-val" class="font-bold text-2xl text-amber-500 w-12 text-center">5</span>
+                    </div>
+                </div>
+
+                <!-- 问 3：AI信任度 -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                        3. 科技信任：你对“AI 可以帮助投资决策”的信任度是多少？
+                        <span class="block text-xs font-normal text-slate-500 mt-1">1 = 绝不相信机器 | 10 = 完全交给AI打理</span>
+                    </label>
+                    <div class="flex items-center gap-4">
+                        <input type="range" id="q-ai" min="1" max="10" step="1" value="5" class="flex-1">
+                        <span id="ai-val" class="font-bold text-2xl text-blue-500 w-12 text-center">5</span>
+                    </div>
+                </div>
+                
+                <!-- 问 4：恐慌指数 -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                        4. 情绪波动指数：你对本课程的陌生/焦虑程度是多少？
+                        <span class="block text-xs font-normal text-slate-500 mt-1">1 = 轻松拿捏，毫无压力 | 10 = 救命，听到统计学就头大</span>
                     </label>
                     <div class="flex items-center gap-4">
                         <input type="range" id="q-panic" min="1" max="10" step="1" value="5" class="flex-1">
-                        <span id="panic-val" class="font-bold text-2xl text-amber-500 w-12 text-center">5</span>
+                        <span id="panic-val" class="font-bold text-2xl text-rose-500 w-12 text-center">5</span>
                     </div>
                 </div>
+
                 <button type="submit" id="submit-btn" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 rounded-xl shadow-[0_4px_14px_rgba(245,158,11,0.4)] transition transform hover:-translate-y-1 flex justify-center items-center gap-2"><span>提交至大盘系统</span><i class="fas fa-upload"></i></button>
             </form>
         </div>
@@ -166,11 +178,11 @@
     <!-- ================= 核心逻辑 ================= -->
     <script>
         const colors = { 
-            primary: 'rgba(234, 179, 8, 0.8)',   // Amber
+            primary: 'rgba(234, 179, 8, 0.8)',   // Amber (主色调)
             primaryBorder: 'rgb(245, 158, 11)',
-            secondary: 'rgba(59, 130, 246, 0.8)', // Blue
-            accent: 'rgba(244, 63, 94, 0.8)',     // Rose (高风险/高恐慌)
-            safe: 'rgba(16, 185, 129, 0.8)',      // Emerald (低恐慌/保守)
+            secondary: 'rgba(59, 130, 246, 0.8)', // Blue (AI)
+            accent: 'rgba(244, 63, 94, 0.8)',     // Rose (恐慌)
+            safe: 'rgba(16, 185, 129, 0.8)',      // Emerald (稳健)
             purpleBorder: 'rgb(139, 92, 246)',
             text: '#94a3b8' 
         };
@@ -181,7 +193,7 @@
         let sessionId = new URLSearchParams(window.location.search).get('session');
         let rawData = [];
         let mqttClient = null;
-        let charts = { salary: null, panic: null, invest: null, shop: null };
+        let charts = { invest: null, risk: null, ai: null, panic: null };
         let roomTopic = ""; 
 
         function initApp() {
@@ -261,16 +273,14 @@
             updateChartsAndInsights();
 
             document.getElementById('simulate-btn').addEventListener('click', () => {
-                const risks = ['存余额宝生息', '买点基金体验下', '留着考证/考研', '马上清空购物车'];
+                const risks = ['银行存款', '货币基金', '股票基金', '个股', '暂时不投'];
                 const fd = { 
-                    salary: Math.floor(Math.random()*15 + 4), // 4-19k
-                    shop: Math.floor(Math.random()*30 + 5), // 5-35次
-                    inv: risks[Math.floor(Math.random()*4)], 
+                    inv: risks[Math.floor(Math.random()*5)], 
+                    risk: Math.random()>0.8?10:Math.floor(Math.random()*6+3), // 认同度 3-10
+                    ai: Math.floor(Math.random()*9+2), // AI信任 2-10
                     panic: Math.random()>0.8?10:Math.floor(Math.random()*6+3), // 恐慌指数3-10
                     timestamp: Date.now() 
                 };
-                // 偶尔制造极端的网购狂人异常值
-                if(Math.random() > 0.90) fd.shop = Math.floor(Math.random()*50 + 80);
 
                 if (mqttClient && mqttClient.connected) mqttClient.publish(roomTopic, JSON.stringify(fd), { qos: 1 });
                 else { rawData.push(fd); updateChartsAndInsights(); } 
@@ -331,43 +341,46 @@
             const panel = document.getElementById('insights-panel');
 
             if (rawData.length === 0) {
-                if(charts.salary) { charts.salary.data.labels=[]; charts.salary.data.datasets[0].data=[]; }
+                if(charts.invest) charts.invest.data.datasets[0].data=[0,0,0,0,0]; 
+                if(charts.risk) charts.risk.data.datasets[0].data=Array(10).fill(0); 
+                if(charts.ai) charts.ai.data.datasets[0].data=[]; 
                 if(charts.panic) charts.panic.data.datasets[0].data=Array(10).fill(0); 
-                if(charts.invest) charts.invest.data.datasets[0].data=[0,0,0,0]; 
-                if(charts.shop) charts.shop.data.datasets[0].data=[];
                 panel.innerHTML = `<div class="flex items-center gap-2 text-slate-400"><i class="fas fa-satellite-dish animate-pulse"></i> 等待样本池注入数据...</div>`;
             } else {
-                // 1. 期望薪资直方图
-                const mc = {}; rawData.forEach(d => { const h = parseInt(d.salary); mc[h] = (mc[h]||0)+1; });
-                const ml = Object.keys(mc).sort((a,b)=>a-b); 
-                if(charts.salary) { charts.salary.data.labels = ml.map(l=>l+'k'); charts.salary.data.datasets[0].data = ml.map(l=>mc[l]); }
+                // 1. 1万元去向 (饼图)
+                let ic = [0,0,0,0,0]; rawData.forEach(d => { 
+                    if(d.inv==='银行存款') ic[0]++; 
+                    else if(d.inv==='货币基金') ic[1]++; 
+                    else if(d.inv==='股票基金') ic[2]++; 
+                    else if(d.inv==='个股') ic[3]++; 
+                    else if(d.inv==='暂时不投') ic[4]++; 
+                }); 
+                if(charts.invest) { charts.invest.data.datasets[0].data = ic; }
                 
-                // 2. 恐慌指数条形图 (分数越高越红)
+                // 2. 风险认同度条形图
+                const rc = Array(10).fill(0); rawData.forEach(d => { const r = parseInt(d.risk); if(r>=1&&r<=10) rc[r-1]++; });
+                if(charts.risk) { 
+                    charts.risk.data.datasets[0].backgroundColor = rc.map((_, i) => i > 6 ? colors.primaryBorder : (i > 3 ? colors.secondary : colors.safe)); 
+                    charts.risk.data.datasets[0].data = rc; 
+                }
+                
+                // 3. AI信任度散点图 (x轴为提交顺序，y轴为分数)
+                if(charts.ai) { charts.ai.data.datasets[0].data = [...rawData].sort((a,b)=>a.timestamp-b.timestamp).map((d, i) => ({ x: i+1, y: parseInt(d.ai) })); }
+
+                // 4. 恐慌指数条形图 (分数越高越红)
                 const pc = Array(10).fill(0); rawData.forEach(d => { const p = parseInt(d.panic); if(p>=1&&p<=10) pc[p-1]++; });
                 if(charts.panic) { 
                     charts.panic.data.datasets[0].backgroundColor = pc.map((_, i) => i > 6 ? colors.accent : (i > 3 ? colors.primaryBorder : colors.safe)); 
                     charts.panic.data.datasets[0].data = pc; 
                 }
-                
-                // 3. 奖学金去向饼图
-                let ic = [0,0,0,0]; rawData.forEach(d => { 
-                    if(d.inv==='存余额宝生息') ic[0]++; 
-                    else if(d.inv==='买点基金体验下') ic[1]++; 
-                    else if(d.inv==='留着考证/考研') ic[2]++; 
-                    else if(d.inv==='马上清空购物车') ic[3]++; 
-                }); 
-                if(charts.invest) { charts.invest.data.datasets[0].data = ic; }
-                
-                // 4. 网购频次散点图
-                if(charts.shop) { charts.shop.data.datasets[0].data = [...rawData].sort((a,b)=>a.timestamp-b.timestamp).map((d, i) => ({ x: i+1, y: parseInt(d.shop) })); }
 
                 // 面板计算
-                const salData = rawData.map(d => parseInt(d.salary)).filter(n => !isNaN(n));
-                const shoData = rawData.map(d => parseInt(d.shop)).filter(n => !isNaN(n));
+                const riskData = rawData.map(d => parseInt(d.risk)).filter(n => !isNaN(n));
+                const aiData = rawData.map(d => parseInt(d.ai)).filter(n => !isNaN(n));
                 const panData = rawData.map(d => parseInt(d.panic)).filter(n => !isNaN(n));
 
-                const sStats = calcStats(salData);
-                const shStats = calcStats(shoData);
+                const rStats = calcStats(riskData);
+                const aStats = calcStats(aiData);
                 const pStats = calcStats(panData);
 
                 let iMode = '-', maxCount = 0;
@@ -375,26 +388,26 @@
                 for (const [k, v] of Object.entries(iCounts)) { if (v > maxCount) { maxCount = v; iMode = k; } }
 
                 panel.innerHTML = `
-                    ${buildStatCard('期望毕业月薪', 'fas fa-money-bill-wave', sStats, ' k', 'text-amber-400')}
-                    ${buildStatCard('课程“挂科”恐慌度', 'fas fa-heartbeat', pStats, ' 分', 'text-rose-400')}
-                    ${buildStatCard('每月网购/外卖频次', 'fas fa-shopping-bag', shStats, ' 次', 'text-blue-400')}
+                    ${buildStatCard('风险/收益认同度', 'fas fa-balance-scale', rStats, ' 分', 'text-amber-400')}
+                    ${buildStatCard('AI辅助信任度', 'fas fa-robot', aStats, ' 分', 'text-blue-400')}
+                    ${buildStatCard('课程焦虑指数', 'fas fa-heartbeat', pStats, ' 分', 'text-rose-400')}
                     
                     <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700/50">
-                        <div class="text-emerald-400 font-bold mb-2 flex items-center gap-2"><i class="fas fa-chart-pie"></i> 奖学金的群体抉择</div>
+                        <div class="text-emerald-400 font-bold mb-2 flex items-center gap-2"><i class="fas fa-chart-pie"></i> 闲钱支配群体抉择</div>
                         <div class="text-xs text-slate-400">选择最多的去向 (众数): <span class="text-white font-bold ml-1">${iMode}</span></div>
                     </div>
                 `;
             }
-            ['salary','panic','invest','shop'].forEach(c => { if(charts[c]) charts[c].update(); });
+            ['invest','risk','ai','panic'].forEach(c => { if(charts[c]) charts[c].update(); });
         }
 
         function initCharts() {
             if (typeof Chart === 'undefined') return;
             try {
-                charts.salary = new Chart(document.getElementById('salaryChart').getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ data: [], backgroundColor: colors.secondary, borderRadius: 4 }] }, options: chartOptions });
+                charts.invest = new Chart(document.getElementById('investChart').getContext('2d'), { type: 'doughnut', data: { labels: ['银行存款', '货币基金', '股票基金', '个股', '暂时不投'], datasets: [{ data: [0,0,0,0,0], backgroundColor: [colors.safe, '#34d399', '#60a5fa', colors.accent, '#94a3b8'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: colors.text, padding: 12, boxWidth: 10 } } }, cutout: '60%' } });
+                charts.risk = new Chart(document.getElementById('riskChart').getContext('2d'), { type: 'bar', data: { labels: ['1','2','3','4','5','6','7','8','9','10'], datasets: [{ data: Array(10).fill(0), backgroundColor: colors.primaryBorder, borderRadius: 4 }] }, options: chartOptions });
+                charts.ai = new Chart(document.getElementById('aiChart').getContext('2d'), { type: 'scatter', data: { datasets: [{ data: [], backgroundColor: colors.secondary, pointRadius: 5, pointHoverRadius: 8 }] }, options: { ...chartOptions, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true, max: 10 } } } });
                 charts.panic = new Chart(document.getElementById('panicChart').getContext('2d'), { type: 'bar', data: { labels: ['1','2','3','4','5','6','7','8','9','10'], datasets: [{ data: Array(10).fill(0), backgroundColor: colors.primaryBorder, borderRadius: 4 }] }, options: chartOptions });
-                charts.invest = new Chart(document.getElementById('investChart').getContext('2d'), { type: 'doughnut', data: { labels: ['存余额宝', '买基金', '考证考研', '清空购物车'], datasets: [{ data: [0,0,0,0], backgroundColor: [colors.safe, colors.secondary, colors.purpleBorder, colors.accent], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: colors.text, padding: 15, boxWidth: 12 } } }, cutout: '65%' } });
-                charts.shop = new Chart(document.getElementById('shopChart').getContext('2d'), { type: 'scatter', data: { datasets: [{ data: [], backgroundColor: colors.primaryBorder, pointRadius: 5, pointHoverRadius: 8 }] }, options: { ...chartOptions, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true } } } });
             } catch(e) {}
         }
 
@@ -410,7 +423,16 @@
                 mobBar.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> 正在接入教室统计网关...';
             }
 
-            document.getElementById('q-salary').addEventListener('input', e => document.getElementById('salary-val').textContent = e.target.value);
+            document.getElementById('q-risk').addEventListener('input', e => { 
+                const v = parseInt(e.target.value); 
+                document.getElementById('risk-val').textContent = v; 
+                document.getElementById('risk-val').className = `font-bold text-2xl w-12 text-center transition-colors ${v>7?'text-amber-600':(v>4?'text-blue-500':'text-emerald-500')}`; 
+            });
+            document.getElementById('q-ai').addEventListener('input', e => { 
+                const v = parseInt(e.target.value); 
+                document.getElementById('ai-val').textContent = v; 
+                document.getElementById('ai-val').className = `font-bold text-2xl w-12 text-center transition-colors ${v>7?'text-blue-600':(v>4?'text-amber-500':'text-slate-500')}`; 
+            });
             document.getElementById('q-panic').addEventListener('input', e => { 
                 const v = parseInt(e.target.value); 
                 document.getElementById('panic-val').textContent = v; 
@@ -421,13 +443,13 @@
                 e.preventDefault(); 
                 
                 const checkedInvest = document.querySelector('input[name="q-invest"]:checked');
-                const investValue = checkedInvest ? checkedInvest.value : '存余额宝生息';
+                const investValue = checkedInvest ? checkedInvest.value : '暂时不投';
                 
                 const btn = document.getElementById('submit-btn'); 
                 const fd = { 
-                    salary: document.getElementById('q-salary').value, 
-                    shop: document.getElementById('q-shop').value, 
                     inv: investValue, 
+                    risk: document.getElementById('q-risk').value, 
+                    ai: document.getElementById('q-ai').value, 
                     panic: document.getElementById('q-panic').value, 
                     timestamp: Date.now() 
                 };
@@ -437,10 +459,10 @@
                     mqttClient.publish(roomTopic, JSON.stringify(fd), { qos: 1 });
                     
                     document.getElementById('submitted-data-list').innerHTML = `
-                        <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm border border-slate-100"><span class="text-slate-500"><i class="fas fa-money-bill-wave w-5 text-amber-500"></i> 期望月薪</span><span class="font-bold text-slate-800">${fd.salary} k</span></div>
-                        <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm border border-slate-100"><span class="text-slate-500"><i class="fas fa-shopping-bag w-5 text-blue-500"></i> 网购外卖</span><span class="font-bold text-slate-800">${fd.shop} 次</span></div>
-                        <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm border border-slate-100"><span class="text-slate-500"><i class="fas fa-chart-pie w-5 text-emerald-500"></i> 奖金去向</span><span class="font-bold text-slate-800 text-xs">${fd.inv.substring(0,6)}...</span></div>
-                        <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm border border-slate-100"><span class="text-slate-500"><i class="fas fa-heartbeat w-5 ${fd.panic > 6 ? 'text-red-500' : 'text-slate-500'}"></i> 恐慌指数</span><span class="font-bold ${fd.panic > 6 ? 'text-red-500' : 'text-slate-800'}">${fd.panic} 分</span></div>
+                        <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm border border-slate-100"><span class="text-slate-500"><i class="fas fa-wallet w-5 text-emerald-500"></i> 1万元去向</span><span class="font-bold text-slate-800 text-sm">${fd.inv}</span></div>
+                        <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm border border-slate-100"><span class="text-slate-500"><i class="fas fa-balance-scale w-5 text-amber-500"></i> 风险收益观</span><span class="font-bold text-slate-800">${fd.risk} 分</span></div>
+                        <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm border border-slate-100"><span class="text-slate-500"><i class="fas fa-robot w-5 text-blue-500"></i> AI信任度</span><span class="font-bold text-slate-800">${fd.ai} 分</span></div>
+                        <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm border border-slate-100"><span class="text-slate-500"><i class="fas fa-heartbeat w-5 ${fd.panic > 6 ? 'text-red-500' : 'text-slate-500'}"></i> 课程焦虑度</span><span class="font-bold ${fd.panic > 6 ? 'text-red-500' : 'text-slate-800'}">${fd.panic} 分</span></div>
                     `;
 
                     setTimeout(() => {
@@ -459,9 +481,9 @@
                 document.getElementById('success-view').style.display = 'none';
                 document.getElementById('mobile-connection-bar').style.display = 'block';
                 document.getElementById('student-form').reset(); 
-                document.getElementById('salary-val').textContent = '8'; 
-                document.getElementById('panic-val').textContent = '5'; 
-                document.getElementById('panic-val').className = 'font-bold text-2xl text-amber-500 w-12 text-center';
+                document.getElementById('risk-val').textContent = '5'; document.getElementById('risk-val').className = 'font-bold text-2xl text-amber-500 w-12 text-center';
+                document.getElementById('ai-val').textContent = '5'; document.getElementById('ai-val').className = 'font-bold text-2xl text-blue-500 w-12 text-center';
+                document.getElementById('panic-val').textContent = '5'; document.getElementById('panic-val').className = 'font-bold text-2xl text-amber-500 w-12 text-center';
                 document.getElementById('submit-btn').innerHTML = '<span>提交至大盘系统</span><i class="fas fa-upload"></i>'; document.getElementById('submit-btn').disabled = false;
                 setupTeacherLogic();
             });
